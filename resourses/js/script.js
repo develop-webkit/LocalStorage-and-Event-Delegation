@@ -6,8 +6,6 @@ const clearBtn = addItemsForm.querySelector("#clearBtn");
 const checkBtn = addItemsForm.querySelector("#checkBtn");
 const uncheckBtn = addItemsForm.querySelector("#uncheckBtn");
 
-
-
 publishItems(itemsList,items);
 
 function publishItems(ulLocation,itemsArray = []){
@@ -34,7 +32,6 @@ function formSubmit(e){
     items.push(item);
     this.reset();
     localStorage.setItem("item",JSON.stringify(items));
-    console.log("Submit:",JSON.parse(localStorage.getItem("item")),items)
     publishItems(itemsList,JSON.parse(localStorage.getItem("item")));
 }
 
@@ -44,8 +41,7 @@ function checkBoxFunc(e){
     localItem[e.target.dataset.index].done = !localItem[e.target.getAttribute("data-index")].done;
     localStorage.setItem("item",JSON.stringify(localItem));
     items.splice(0,items.length,...JSON.parse(localStorage.getItem("item")));
-    console.table("Clicked:",JSON.parse(localStorage.getItem("item")),":",localItem)
-    publishItems(itemsList,localItem);
+    publishItems(itemsList,items);
 }
 
 itemsList.addEventListener('click',checkBoxFunc);
@@ -58,11 +54,20 @@ clearBtn.addEventListener('click',() =>{
 
 checkBtn.addEventListener('click',() => {
     const localItem = JSON.parse(localStorage.getItem("item"));
-    localItem.map((cur,index) => {
-        console.log(cur[index].done);
+    localItem.map((curItem) => {
+        curItem.done = true;
     });
+    localStorage.setItem("item",JSON.stringify(localItem));
+    items.splice(0,items.length,...JSON.parse(localStorage.getItem("item")));
+    publishItems(itemsList,localItem);
 });
 
 uncheckBtn.addEventListener('click',() => {
-    
+    const localItem = JSON.parse(localStorage.getItem("item"));
+    localItem.map((curItem) => {
+        curItem.done = false;
+    });
+    localStorage.setItem("item",JSON.stringify(localItem));
+    items.splice(0,items.length,...JSON.parse(localStorage.getItem("item")));
+    publishItems(itemsList,localItem);
 });
